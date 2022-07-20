@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +34,7 @@ public class ProductoController {
 	}
 	
 	 @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	    public Flux<Producto> getAllBooks() {
+	    public Flux<Producto> getAllProducts() {
 	        return productoRepository.findAll();
 	    }
 	 
@@ -44,7 +45,18 @@ public class ProductoController {
 	 
 	    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	    public Mono<Producto> save(@RequestBody Producto producto) {
-	        return productoRepository.save(producto);
+	        return productoRepository.crearProducto(
+	        		producto.getIdProducto(),
+	        		producto.getNombreProducto(),
+	        		producto.getImagenProducto(),
+	        		producto.getDescripcionProducto(),
+	        		producto.getPrecioProducto(),
+	        		producto.getStockProducto());
+	    }
+	    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	    public Mono<Producto> update(@RequestBody Producto producto) {
+	        return productoRepository.save(
+	        		producto);
 	    }
 	 
 	    @DeleteMapping(value = "/{id}")
